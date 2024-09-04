@@ -5,24 +5,24 @@ namespace App\Filament\Vet\Resources;
 use App\Filament\Vet\Resources\PetDetailsResource\Pages;
 use App\Filament\Vet\Resources\PetDetailsResource\RelationManagers;
 use App\Models\PetDetails;
+use App\Models\PetOwner; // Import the PetOwner model
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PetDetailsResource extends Resource
 {
     protected static ?string $model = PetDetails::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                    Forms\Components\TextInput::make('pet_name')
+                Forms\Components\TextInput::make('pet_name')
                     ->required()
                     ->maxLength(255),
                     
@@ -41,17 +41,19 @@ class PetDetailsResource extends Resource
                     ->required(),
                     
                 Forms\Components\FileUpload::make('pet_picture')
-                    ->image()
+                    ->image(),
                     
-                ]);
-          
+                Forms\Components\Select::make('pet_owner_id') 
+                    ->label('Pet Owner')
+                    ->relationship('petOwner', 'petowners_name') 
+                    ->required()
+            ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                
                 Tables\Columns\TextColumn::make('pet_name')
                     ->sortable()
                     ->searchable(),
@@ -71,10 +73,13 @@ class PetDetailsResource extends Resource
                     
                 Tables\Columns\ImageColumn::make('pet_picture')
                     ->sortable(),
-                
+                    
+                Tables\Columns\TextColumn::make('petOwner.petowners_name') 
+                    ->label('Pet Owner')
+                    ->sortable(),
             ])
             ->filters([
-                //
+                // Add any filters you need here
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
@@ -93,7 +98,7 @@ class PetDetailsResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            // Define relationships if needed
         ];
     }
 

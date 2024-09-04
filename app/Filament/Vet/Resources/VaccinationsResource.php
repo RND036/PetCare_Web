@@ -10,8 +10,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class VaccinationsResource extends Resource
 {
@@ -22,36 +20,57 @@ class VaccinationsResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-        ->schema([
-            Forms\Components\TextInput::make('vaccine_name')
-            ->required()
-            ->maxLength(255),
-            
-            Forms\Components\DatePicker::make('vaccination_exp_date')
-            ->required(),
-            
-        Forms\Components\TextInput::make('vaccine_manufacture')
-            ->required()
-            ->maxLength(20),
-            
-        Forms\Components\TextInput::make('batch_number')
-            ->required()
-            ->maxLength(255),
-            Forms\Components\DatePicker::make('date_administered')
-            ->required(),
-            Forms\Components\DatePicker::make('next_due_date')
-            ->required(),
-        
-            Forms\Components\TextInput::make('dosage')
-            ->required()
-            ->maxLength(20),
-            Forms\Components\TextInput::make('administration_method')
-            ->required()
-            ->maxLength(20),
-            Forms\Components\TextInput::make('notes')
-            ->required()
-            ->maxLength(20),
-        ]);
+            ->schema([
+                Forms\Components\Select::make('pet_detail_id')
+                    ->relationship('petDetails', 'pet_name') // assuming 'petDetails' is the relationship method in the model
+                    ->required()
+                    ->label('Pet Name'),
+
+                Forms\Components\Select::make('vaccine_name')
+                    ->options([
+                        'Rabies Vaccine' => 'Rabies Vaccine',
+                        'Distemper Vaccine' => 'Distemper Vaccine',
+                        'Parvovirus Vaccine' => 'Parvovirus Vaccine',
+                        'Adenovirus Type 2 Vaccine' => 'Adenovirus Type 2 Vaccine',
+                        'Leptospirosis Vaccine' => 'Leptospirosis Vaccine',
+                        'Bordetella Vaccine' => 'Bordetella Vaccine',
+                        'Canine Influenza Vaccine' => 'Canine Influenza Vaccine',
+                        'Lyme Disease Vaccine' => 'Lyme Disease Vaccine',
+                        'Coronavirus Vaccine' => 'Coronavirus Vaccine',
+                        'Parainfluenza Vaccine' => 'Parainfluenza Vaccine',
+                    ])
+                    ->required()
+                    ->label('Vaccine Name'),
+
+                Forms\Components\DatePicker::make('vaccination_exp_date')
+                    ->required(),
+                
+                Forms\Components\TextInput::make('vaccine_manufacture')
+                    ->required()
+                    ->maxLength(20),
+
+                Forms\Components\TextInput::make('batch_number')
+                    ->required()
+                    ->maxLength(255),
+
+                Forms\Components\DatePicker::make('date_administered')
+                    ->required(),
+
+                Forms\Components\DatePicker::make('next_due_date')
+                    ->required(),
+
+                Forms\Components\TextInput::make('dosage')
+                    ->required()
+                    ->maxLength(20),
+
+                Forms\Components\TextInput::make('administration_method')
+                    ->required()
+                    ->maxLength(20),
+
+                Forms\Components\TextInput::make('notes')
+                    ->nullable()
+                    ->maxLength(255),
+            ]);
     }
 
     public static function table(Table $table): Table
@@ -59,43 +78,42 @@ class VaccinationsResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('vaccine_name')
-                ->sortable()
-                ->searchable(),
-                
-            Tables\Columns\TextColumn::make('vaccination_exp_date')
-                ->sortable()
-                ->searchable(),
-                
-            Tables\Columns\TextColumn::make('vaccine_manufacture')
-                ->sortable()
-                ->searchable(),
-                
-            Tables\Columns\TextColumn::make('batch_number')
-                ->sortable()
-                ->searchable(),
-                
-            Tables\Columns\TextColumn::make('date_administered')
-                ->date()
-                ->sortable()
-                ->searchable(),
+                    ->sortable()
+                    ->searchable(),
 
+                Tables\Columns\TextColumn::make('vaccination_exp_date')
+                    ->sortable()
+                    ->searchable(),
 
-            Tables\Columns\TextColumn::make('next_due_date')
-                ->date()
-                ->sortable()
-                ->searchable(),
+                Tables\Columns\TextColumn::make('vaccine_manufacture')
+                    ->sortable()
+                    ->searchable(),
 
-            Tables\Columns\TextColumn::make('dosage')
-                ->sortable()
-                ->searchable(),
+                Tables\Columns\TextColumn::make('batch_number')
+                    ->sortable()
+                    ->searchable(),
 
-            Tables\Columns\TextColumn::make('administration_method')
-                ->sortable()
-                ->searchable(),
+                Tables\Columns\TextColumn::make('date_administered')
+                    ->date()
+                    ->sortable()
+                    ->searchable(),
 
-            Tables\Columns\TextColumn::make('notes')
-                ->sortable()
-                ->searchable(),
+                Tables\Columns\TextColumn::make('next_due_date')
+                    ->date()
+                    ->sortable()
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('dosage')
+                    ->sortable()
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('administration_method')
+                    ->sortable()
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('notes')
+                    ->sortable()
+                    ->searchable(),
             ])
             ->filters([
                 //

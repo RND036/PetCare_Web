@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('pet_details', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('pet_owner_id')->constrained('pet_owners')->onDelete('cascade');
             $table->string('pet_name');
             $table->string('pet_breed');
             $table->string('pet_gender');
             $table->date('date_of_birth');
             $table->string('pet_picture')->nullable();
-        
             $table->timestamps();
+
         });
     }
 

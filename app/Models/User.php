@@ -21,6 +21,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'is_admin',
+        
     ];
 
     /**
@@ -45,6 +46,11 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
             'is_admin'=>'boolean',
         ];
+    }
+
+    public function petOwner()
+    {
+        return $this->hasOne(PetOwner::class,'user_id');
     }
 
 }

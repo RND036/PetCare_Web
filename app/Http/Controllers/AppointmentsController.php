@@ -70,11 +70,18 @@ class AppointmentsController extends Controller
         $appointment->service_required=$request->service_required;
 
         if ($appointment->save()) {
-            $appointment->notify(new AppointmentReminder($appointment));
-            return redirect()->back()->with('success', 'Appointment scheduled successfully!');
+            try {
+                $appointment->notify(new AppointmentReminder($appointment));
+                return redirect()->back()->with('success', 'Appointment scheduled successfully!');
+            } catch (\Exception $e) {
+                // Log the error if needed
+                \Log::error('Notification Error: ' . $e->getMessage());
+                return redirect()->back()->with('error', 'Appointment scheduled but notification failed. Please contact support.');
+            }
         } else {
             return redirect()->back()->with('error', 'There was a problem scheduling your appointment. Please try again.');
         }
+        
 
         // Create a new appointment in the database
         // $appointment = Appointment::create($validatedData);

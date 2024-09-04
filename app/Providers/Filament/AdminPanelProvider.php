@@ -45,7 +45,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->colors([
                 'primary' => Color::Blue,
-                'primary' => Color::Blue,
+                
             ])
             
 

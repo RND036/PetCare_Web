@@ -12,6 +12,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
+use Filament\Forms\Components\HiddenInput;
 
 class PetOwnerResource extends Resource
 {
@@ -23,7 +25,7 @@ class PetOwnerResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('petowners_name')
+            Forms\Components\TextInput::make('petowners_name')
                 ->required()
                 ->maxLength(255),
                 
@@ -40,6 +42,12 @@ class PetOwnerResource extends Resource
                 ->required()
                 ->email() 
                 ->maxLength(255),
+
+            HiddenInput::make('user_id')
+                ->default(Auth::id())
+                ->required(),
+            // Forms\Components\Hidden::make('user_id')
+            //         ->default(Auth::id()),
             ]);
     }
 

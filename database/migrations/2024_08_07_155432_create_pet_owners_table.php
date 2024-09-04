@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('pet_owners', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade')->change();
             $table->string('petowners_name')->unique();
             $table->string('petowners_address');
             $table->string('petowners_phone')->unique();

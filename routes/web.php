@@ -1,26 +1,29 @@
 <?php
 
-use App\Http\Controllers\AppointmentsController;
 use App\Livewire\AppointmentsIndex;
 use App\Livewire\DashboardIndex;
 use App\Livewire\PetDetailsIndex;
-use App\Livewire\PetIndex;
+use App\Livewire\PetOwnerIndex;
 use App\Http\Controllers\ProfileController;
 use App\Livewire\PurchaseIndex;
-use App\Mail\AppointmentReminderEmail;
-use App\Mail\TestEmail;
-use App\Models\Appointment;
-use App\Notifications\AppointmentReminder;
+use App\Livewire\VaccinationsIndex;
 use Google\Rpc\Context\AttributeContext\Request;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\QrCodeController;
+use App\Http\Controllers\AppointmentsController;
 
+
+Route::get('/user/appointments', AppointmentsIndex::class)->name('user.appointments')->middleware('auth');
+
+
+Route::middleware('auth')->get('/livewire/qr-code', [QrCodeController::class, 'showQRCode'])->name('livewire.qrcode');
 
 Route::get('/', function () {
     return view('Page.Home');
 })->name('home');
+
 Route::get('/About', function () {
     return view('Page.About');
 });
@@ -91,8 +94,9 @@ require __DIR__.'/auth.php';
 Route::get('/dashboards', DashboardIndex::class)->name('dashboard.index');
 Route::get('/appointments', AppointmentsIndex::class)->name('appointments.index');
 Route::get('/petdetails', PetDetailsIndex::class)->name('pet-details-index');
-Route::get('/purchased', PurchaseIndex::class)->name('purchase.index');
-
+//Route::get('/purchased', PurchaseIndex::class)->name('purchase.index');
+Route::get('/petowner', PetOwnerIndex::class)->name('pet-owner.index');
+Route::get('/vaccinations', VaccinationsIndex::class)->name('vaccinations.index');
 
 // routes/web.php
 Route::post('/logout', function () {

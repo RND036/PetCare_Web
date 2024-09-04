@@ -9,16 +9,35 @@ class PetOwner extends Model
 {
     use HasFactory;
 
-     // Specify which attributes can be mass-assigned
-     protected $fillable = [
-        'pet_owner_id',
+    protected $fillable = [
+        'user_id',
         'petowners_name',
         'petowners_address',
         'petowners_phone',
         'petowners_email',
     ];
 
-    // If you want to set the table name manually (optional)
     protected $table = 'pet_owners';
+    
+    public function petDetails()
+    {
+        return $this->hasMany(PetDetails::class, 'pet_owner_id'); // Correct relationship name
+    }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function vaccinations()
+    {
+        return $this->hasManyThrough(
+            Vaccinations::class, // Proper class name
+            PetDetails::class,
+            'pet_owner_id', // Foreign key on PetDetails table
+            'pet_detail_id', // Foreign key on Vaccinations table
+            'id', // Local key on PetOwner table
+            'id'  // Local key on PetDetails table
+        );
+    }
 }

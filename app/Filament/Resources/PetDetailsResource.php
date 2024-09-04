@@ -3,15 +3,13 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PetDetailsResource\Pages;
-use App\Filament\Resources\PetDetailsResource\RelationManagers;
 use App\Models\PetDetails;
+use App\Models\PetOwner;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\DatePicker;
@@ -26,36 +24,33 @@ class PetDetailsResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\Section::make('Pet Information')
-                ->schema([
-                    TextInput::make('pet_name')
-                        ->label('Pet Name')
-                        ->required()
-                        ->maxLength(255),
-                    
-                    TextInput::make('pet_breed')
-                        ->label('Pet Breed')
-                        ->required()
-                        ->maxLength(255),
-                    
-                    Select::make('pet_gender')
-                        ->label('Pet Gender')
-                        ->options([
-                            'Male' => 'Male',
-                            'Female' => 'Female',
-                        ])
-                        ->required(),
-                    
-                    DatePicker::make('date_of_birth')
-                        ->label('Date of Birth')
-                        ->required(),
-                    
-                    FileUpload::make('pet_picture')
-                        ->label('Pet Picture')
-                        ->image(),
-                ]),
-            ]);
+        ->schema([
+            Forms\Components\TextInput::make('pet_name')
+                ->required()
+                ->maxLength(255),
+                
+            Forms\Components\TextInput::make('pet_breed')
+                ->required()
+                ->maxLength(255),
+                
+            Forms\Components\Select::make('pet_gender')
+                ->options([
+                    'Male' => 'Male',
+                    'Female' => 'Female',
+                ])
+                ->required(),
+                
+            Forms\Components\DatePicker::make('date_of_birth')
+                ->required(),
+                
+            Forms\Components\FileUpload::make('pet_picture')
+                ->image(),
+                
+            Forms\Components\Select::make('pet_owner_id') 
+                ->label('Pet Owner')
+                ->relationship('petOwner', 'petowners_name') 
+                ->required()
+        ]);
     }
 
     public static function table(Table $table): Table
@@ -63,27 +58,32 @@ class PetDetailsResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('pet_name')
-                ->sortable()
-                ->searchable(),
+                    ->sortable()
+                    ->searchable(),
                 
-            Tables\Columns\TextColumn::make('pet_breed')
-                ->sortable()
-                ->searchable(),
+                Tables\Columns\TextColumn::make('pet_breed')
+                    ->sortable()
+                    ->searchable(),
                 
-            Tables\Columns\TextColumn::make('pet_gender')
-                ->sortable()
-                ->searchable(),
+                Tables\Columns\TextColumn::make('pet_gender')
+                    ->sortable()
+                    ->searchable(),
                 
-            Tables\Columns\TextColumn::make('date_of_birth')
-                ->date()
-                ->sortable()
-                ->searchable(),
+                Tables\Columns\TextColumn::make('date_of_birth')
+                    ->date()
+                    ->sortable()
+                    ->searchable(),
                 
-            Tables\Columns\ImageColumn::make('pet_picture')
-                ->sortable(),
+                Tables\Columns\ImageColumn::make('pet_picture')
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('petOwner.petowners_name') 
+                    ->label('Pet Owner')
+                    ->sortable(),    
+
             ])
             ->filters([
-                //
+                // Add filters if necessary
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
@@ -102,7 +102,7 @@ class PetDetailsResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            // Define any relationships if needed
         ];
     }
 

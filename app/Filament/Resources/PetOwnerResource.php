@@ -13,6 +13,8 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\HiddenInput;
+use Illuminate\Support\Facades\Auth;
 
 class PetOwnerResource extends Resource
 {
@@ -25,29 +27,34 @@ class PetOwnerResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Section::make('Pet Owner Information')
-            ->schema([
-                TextInput::make('petowners_name')
-                    ->label('Pet Owner Name')
-                    ->required()
-                    ->maxLength(255),
-                
-                TextInput::make('petowners_address')
-                    ->label('Pet Owner Address')
-                    ->required()
-                    ->maxLength(255),
-                
-                TextInput::make('petowners_phone')
-                    ->label('Pet Owner Phone')
-                    ->required()
-                    ->tel()
-                    ->maxLength(20),
-                
-                TextInput::make('petowners_email')
-                    ->label('Pet Owner Email')
-                    ->required()
-                    ->email()
-                    ->maxLength(255),
-            ]),
+                    ->schema([
+                        TextInput::make('petowners_name')
+                            ->label('Pet Owner Name')
+                            ->required()
+                            ->maxLength(255),
+                        
+                        TextInput::make('petowners_address')
+                            ->label('Pet Owner Address')
+                            ->required()
+                            ->maxLength(255),
+                        
+                        TextInput::make('petowners_phone')
+                            ->label('Pet Owner Phone')
+                            ->required()
+                            ->tel()
+                            ->maxLength(20),
+                        
+                        TextInput::make('petowners_email')
+                            ->label('Pet Owner Email')
+                            ->required()
+                            ->email()
+                            ->maxLength(255),
+                        
+
+                        HiddenInput::make('user_id')
+                            ->default(Auth::id())
+                            ->required(),
+                    ]),
             ]);
     }
 
@@ -56,29 +63,29 @@ class PetOwnerResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('petowners_name')
-                ->sortable()
-                ->searchable(),
+                    ->sortable()
+                    ->searchable(),
                 
-            Tables\Columns\TextColumn::make('petowners_address')
-                ->sortable()
-                ->searchable(),
+                Tables\Columns\TextColumn::make('petowners_address')
+                    ->sortable()
+                    ->searchable(),
                 
-            Tables\Columns\TextColumn::make('petowners_phone')
-                ->sortable()
-                ->searchable(),
+                Tables\Columns\TextColumn::make('petowners_phone')
+                    ->sortable()
+                    ->searchable(),
                 
-            Tables\Columns\TextColumn::make('petowners_email')
-                ->sortable()
-                ->searchable(),
+                Tables\Columns\TextColumn::make('petowners_email')
+                    ->sortable()
+                    ->searchable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([ 
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),    
-                Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),    
+                    Tables\Actions\ViewAction::make(),
                 ]),  
             ])
             ->bulkActions([

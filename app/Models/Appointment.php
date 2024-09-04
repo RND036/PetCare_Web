@@ -41,5 +41,8 @@ class Appointment extends Model
     return $this->belongsTo(PetOwner::class, 'pet_owner_id');
 }
 
-
+public function user()
+{
+    return $this->belongsTo(User::class, 'petowner_email', 'email');
+}
 }
